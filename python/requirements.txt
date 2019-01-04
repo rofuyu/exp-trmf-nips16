@@ -1,0 +1,4 @@
+intel-openmp==2019.0
+mkl==2019.0
+numpy==1.15.4
+scipy==1.2.0
