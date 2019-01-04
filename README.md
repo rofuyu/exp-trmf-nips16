@@ -7,11 +7,8 @@ This is the experimental code for the following paper:
 Interfaces
 ==========
 The core codes of TRMF are implemented in C++. The original experiments are done using a Matlab interface. 
-Upon the requests, I refactored the core C++ codes and created an easier-to-use Python interface (with Scipy/Numpy)
-	* matlab:
-	   ** See matlab/ for more details
-	* python:
-	   ** See python for more details
+Upon the requests, I refactored the core C++ codes and created an easy-to-use Python interface (with Scipy/Numpy).
+
 
 Citation
 ========
