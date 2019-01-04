@@ -1,0 +1,2 @@
+python/exp-scripts/datasets/electricity.npy filter=lfs diff=lfs merge=lfs -text
+python/exp-scripts/datasets/traffic.npy filter=lfs diff=lfs merge=lfs -text
