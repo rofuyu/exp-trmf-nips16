@@ -11,7 +11,7 @@ SONAME=trmf
 
 SCIPY_BLAS=$(shell python -W ignore -c "import numpy.distutils.system_info as C;print(' '.join('-l{}'.format(x) for x in C.get_info('lapack_opt')['libraries']))" | tail -n 1)
 SCIPY_BLAS_DIR=$(shell python -W ignore -c "import numpy.distutils.system_info as C;print(' '.join('-L{}'.format(x) for x in C.get_info('lapack_opt')['library_dirs']))" | tail -n 1)
-SCIPY_BLAS_RPATH=$(shell python -W ignore -c "import numpy.distutils.system_info as C;print(' '.join('-Wl,rpath={}'.format(x) for x in C.get_info('lapack_opt')['library_dirs']))" | tail -n 1)
+SCIPY_BLAS_RPATH=$(shell python -W ignore -c "import numpy.distutils.system_info as C;print('-Wl,-rpath={}'.format(':'.join(C.get_info('lapack_opt')['library_dirs'])))" | tail -n 1)
 LIBSFLAGS=${SCIPY_BLAS_DIR} ${SCIPY_BLAS}
 LIBSFLAGS=${SCIPY_BLAS_RPATH} ${SCIPY_BLAS_DIR} ${SCIPY_BLAS} -liomp5
 
