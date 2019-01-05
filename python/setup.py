@@ -19,7 +19,8 @@ def get_blas_link_args(blas='lapack_opt'):
     libs = info.get_info(blas)['libraries']
     libs_cmd = ['-l{}'.format(x) for x in libs]
     dirs_cmd = ['-L{}'.format(x) for x in dirs]
-    return libs_cmd + dirs_cmd
+    rpath_cmd = ['-Wl,-rpath={}'.format(':'.join(dirs))]
+    return rpath_cmd + libs_cmd + dirs_cmd
 
 source_codes = ["trmf/corelib/trmf.cpp"]
 headers = ["trmf/corelib/rf_matrix.h", "trmf/corelib/rf_tron.h", "trmf/corelib/trmf.h"]
