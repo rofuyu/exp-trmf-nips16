@@ -295,10 +295,10 @@ class dvec_t : public gvec_t<val_type> {
 
         // Copy Assignment
         dvec_t& operator=(const dvec_t& other) {
-            if(this == &other) return *this;
+            if(this == &other) { return *this; }
             if(other.is_view()) {  // view to view copy
                 if(mem_alloc_by_me) clear_space();
-                memcpy(this, &other, sizeof(dvec_t));
+                memcpy(static_cast<void*>(this), &other, sizeof(dvec_t));
             } else { // deep to deep copy
                 resize(other.size());
                 memcpy(buf, other.buf, sizeof(val_type)*len);
@@ -354,9 +354,9 @@ class dvec_t : public gvec_t<val_type> {
         }
         // Move Assignment
         dvec_t& operator=(dvec_t&& other) {
-            if(this == &other) return *this;
+            if(this == &other) { return *this; }
             clear_space();
-            memcpy(this, &other, sizeof(dvec_t));
+            memcpy(static_cast<void*>(this), &other, sizeof(dvec_t));
             other.zero_init();
             return *this;
         }
@@ -367,7 +367,7 @@ class dvec_t : public gvec_t<val_type> {
         bool is_dense() const { return true; }
 
         void clear_space() {
-            if(mem_alloc_by_me) free(buf);
+            if(mem_alloc_by_me) { free(buf); }
             zero_init();
         }
 
@@ -568,7 +568,7 @@ class svec_t : public gvec_t<val_type> {
         svec_t& operator=(svec_t&& other) {
             if(this == &other) return *this;
             clear_space();
-            memcpy(this, &other, sizeof(svec_t));
+            memcpy(static_cast<void*>(this), &other, sizeof(svec_t));
             other.zero_init();
             return *this;
         }
@@ -581,7 +581,8 @@ class svec_t : public gvec_t<val_type> {
 
         void clear_space() {
             if(mem_alloc_by_me){
-                free(idx); free(val);
+                free(idx);
+                free(val);
             }
             zero_init();
         }
@@ -885,8 +886,9 @@ class dmat_t : public gmat_t<val_type> {
         major_t get_major() const { return major_type; }
 
         void clear_space() {
-            if(mem_alloc_by_me)
+            if(mem_alloc_by_me) {
                 free(buf);
+            }
             zero_init();
         }
 
@@ -1489,11 +1491,11 @@ class smat_t : public gmat_t<val_type> {
         // Copy Assignment
         // view => view, deep => deep.
         smat_t& operator=(const smat_t& other) {
-            if(this == &other) return *this;
-            if(mem_alloc_by_me) clear_space();
-            if(other.is_view()) // for view
-                memcpy(this, &other, sizeof(smat_t));
-            else { // deep copy
+            if(this == &other) { return *this; }
+            if(mem_alloc_by_me) { clear_space(); }
+            if(other.is_view()) { // for view
+                memcpy(static_cast<void*>(this), &other, sizeof(smat_t));
+            } else { // deep copy
                 *this = other.get_view();
                 grow_body();
             }
@@ -1547,9 +1549,9 @@ class smat_t : public gmat_t<val_type> {
         }
         // Move Assignment
         smat_t& operator=(smat_t&& other) {
-            if(this == &other) return *this;
+            if(this == &other) { return *this; }
             clear_space();
-            memcpy(this, &other, sizeof(smat_t));
+            memcpy(static_cast<void*>(this), &other, sizeof(smat_t));
             other.zero_init();
             return *this;
         }
@@ -1563,19 +1565,19 @@ class smat_t : public gmat_t<val_type> {
 
         void clear_space() {
             if(mem_alloc_by_me) {
-                if(val)free(val); if(val_t)free(val_t);
-                if(row_ptr)free(row_ptr); if(row_idx)free(row_idx);
-                if(col_ptr)free(col_ptr); if(col_idx)free(col_idx);
+                if(val) { free(val); } if(val_t) { free(val_t); }
+                if(row_ptr) { free(row_ptr); } if(row_idx) { free(row_idx); }
+                if(col_ptr) { free(col_ptr); } if(col_idx) { free(col_idx); }
             }
             zero_init();
         }
 
         smat_t get_view() const {
-            if(is_view())
+            if(is_view()) {
                 return *this;
-            else {
+            } else {
                 smat_t tmp;
-                memcpy(&tmp, this, sizeof(smat_t));
+                memcpy(static_cast<void*>(&tmp), this, sizeof(smat_t));
                 tmp.mem_alloc_by_me = false;
                 return tmp;
             }
@@ -3403,8 +3405,8 @@ extern "C" {
 
     typedef struct {
         uint64_t rows, cols, nnz;
-        uint64_t* row_ptr;
-        uint64_t* col_ptr;
+        size_t* row_ptr;
+        size_t* col_ptr;
         uint32_t* row_idx;
         uint32_t* col_idx;
         void* val;

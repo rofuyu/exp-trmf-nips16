@@ -19,7 +19,7 @@ def get_blas_link_args(blas='lapack_opt'):
     libs = info.get_info(blas)['libraries']
     libs_cmd = ['-l{}'.format(x) for x in libs]
     dirs_cmd = ['-L{}'.format(x) for x in dirs]
-    rpath_cmd = ['-Wl,-rpath={}'.format(':'.join(dirs))]
+    rpath_cmd = ['-Wl,-rpath,{}'.format(':'.join(dirs))]
     return rpath_cmd + libs_cmd + dirs_cmd
 
 source_codes = ["trmf/corelib/trmf.cpp"]
@@ -54,10 +54,9 @@ else :
                                     extra_link_args=["-fopenmp"] + blas_link_args,
                                     language="c++")
 setup(
-    name='py-trmf',
+    name='exp-trmf',
     packages=["trmf"],
-    package_dir = {"liblinear":"."},
-    version='1.0',
+    version='0.1',
     description='Python Interface of TRMF',
     author='Hsiang-Fu Yu',
     author_email='rofu.yu@gmail.com',
