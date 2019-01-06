@@ -20,7 +20,10 @@ def get_blas_link_args(blas='lapack_opt'):
     libs_cmd = ['-l{}'.format(x) for x in libs]
     dirs_cmd = ['-L{}'.format(x) for x in dirs]
     rpath_cmd = ['-Wl,-rpath,{}'.format(':'.join(dirs))]
-    return rpath_cmd + libs_cmd + dirs_cmd
+    blas_link_args = ['-fopenmp', '-Wl,--as-needed'] + rpath_cmd + libs_cmd + dirs_cmd + ['-liomp5']
+    if sys.platform.lower() == 'darwin':
+        blas_link_args = rpath_cmd + ['-framework Accelerate', '-liomp5']
+    return blas_link_args
 
 source_codes = ["trmf/corelib/trmf.cpp"]
 headers = ["trmf/corelib/rf_matrix.h", "trmf/corelib/rf_tron.h", "trmf/corelib/trmf.h"]
@@ -42,7 +45,7 @@ else :
                                     include_dirs=include_dirs,
                                     define_macros=[("ValueType","float")],
                                     extra_compile_args=["-fopenmp", "-march=native", "-O3"],
-                                    extra_link_args=["-fopenmp"] + blas_link_args,
+                                    extra_link_args=blas_link_args,
                                     language="c++")
 
     dynamic_lib_float64 = Extension('{}_float64'.format(libname),
@@ -51,7 +54,7 @@ else :
                                     include_dirs=include_dirs,
                                     define_macros=[("ValueType","double")],
                                     extra_compile_args=["-fopenmp", "-march=native", "-O3"],
-                                    extra_link_args=["-fopenmp"] + blas_link_args,
+                                    extra_link_args=blas_link_args,
                                     language="c++")
 setup(
     name='exp-trmf',
