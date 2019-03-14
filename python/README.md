@@ -30,13 +30,11 @@ Install for MacOS
 
 Dataset
 =======
-    If you have git client with lfs support, the two datasets (traffic and electrcity) should already downloaded in 
-    `exp-trmf-nips16/python/exp-scripts/datasets/`. Otherwise, you can download it manually by
+    You can download it manually by
 
-	> wget https://github.com/rofuyu/exp-trmf-nips16/raw/master/python/exp-scripts/datasets/electricity.npy -O exp-scripts/datasets/electricity.npy
-	> wget https://github.com/rofuyu/exp-trmf-nips16/raw/master/python/exp-scripts/datasets/traffic.npy -O exp-scripts/datasets/traffic.npy
+	> cd exp-scripts/datasets; ./download-data.sh; cd ../..
 
-	The above two datasets are essentially a numpy array with the shape = number of time stamps * number of time series stored in a row major format. 
+	The above two datasets are essentially a numpy array with the shape = (number of time stamps, number of time series) stored in a row major format. 
 
 Usage
 =====
