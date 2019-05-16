@@ -17,7 +17,7 @@ Install
 	> source trmf-env/bin/activate
     > (trmf-env) cd exp-trmf-nips16/python
 	> (trmf-env) pip install -r requirements.txt
-	> (trmf-env) pip install .
+	> (trmf-env) pip install -e .
 
 Install for MacOS
 =================
@@ -26,7 +26,7 @@ Install for MacOS
 	> source trmf-env/bin/activate
     > (trmf-env) cd exp-trmf-nips16/python
 	> (trmf-env) pip install -r requirements.txt
-	> (trmf-env) CC=gcc-8 CXx=g++-8 pip install .
+	> (trmf-env) CC=gcc-8 CXX=g++-8 pip install -e .
 
 Dataset
 =======
