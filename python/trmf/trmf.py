@@ -1,4 +1,4 @@
-import sys
+import sys, os
 from os import path, system
 import collections
 import itertools
@@ -126,6 +126,46 @@ class Model(object):
     @property
     def lag_val(self):
         return self.pylag_val.py_buf['val']
+
+
+    @classmethod
+    def load(cls, path_to_folder, dtype=None):
+        assert path.isdir(path_to_folder)
+        other_members = path.join(path_to_folder, 'other.pkl')
+        with open(other_members, 'rb') as other:
+            other = pickle.load(other)
+            transform = other['transform']
+        np_arrays = path.join(path_to_folder, 'arrays.npz')
+        with open(np_arrays, 'rb') as npz:
+            npz = sp.load(npz)
+            W = npz['W']
+            H = npz['H']
+            lag_val = npz['lag_val']
+            lag_set = npz['lag_set']
+        if dtype is None:
+            dtype = W.dtype
+        return cls(pyW=PyMatrix(W, dtype),
+                   pyH=PyMatrix(H, dtype),
+                   pylag_val=PyMatrix(lag_val, dtype),
+                   lag_set=lag_set,
+                   transform=transform
+                  )
+
+    def save(self, path_to_folder):
+        if not path.exists(path_to_folder):
+            os.makedirs(path_to_folder)
+        else:
+            assert path.isdir(path_to_folder)
+        np_arrays = path.join(path_to_folder, 'arrays.npz')
+        with open(np_arrays, 'wb') as npz:
+            sp.savez(npz, W=self.W,
+                          H=self.H,
+                          lag_val=self.lag_val,
+                          lag_set=self.lag_set)
+        other_members = path.join(path_to_folder, 'other.pkl')
+        with open(other_members, 'wb') as other:
+            tmp = {'transform': self.transform}
+            pickle.dump(tmp, other)
 
     def latent_forecast(self, window, Wnew=None):
         if Wnew is not None:
